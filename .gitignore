@@ -1,0 +1,3 @@
+snyk-report/
+snyk-*.json
+scan-*/

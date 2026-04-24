@@ -1,0 +1,138 @@
+name: Snyk Dependency Security Scan
+
+run-name: >-
+  ${{ github.event_name == 'workflow_dispatch' && 'Snyk Dependency Scan — manual run' ||
+      github.event_name == 'repository_dispatch' && 'Snyk Dependency Scan — triggered by Vercel deploy' ||
+      github.event_name == 'schedule' && 'Snyk Dependency Scan — nightly run' ||
+      'Snyk Dependency Scan' }}
+
+on:
+  repository_dispatch:
+    types: [vercel-deploy]
+  workflow_dispatch:
+  schedule:
+    - cron: '0 7 * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  snyk-scan:
+    name: Snyk Dependency Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install Snyk CLI and HTML reporter
+        run: npm install -g snyk snyk-to-html
+
+      - name: Authenticate with Snyk
+        run: snyk auth ${{ secrets.SNYK_TOKEN }}
+
+      - name: Scan manuelaklenke-web
+        continue-on-error: true
+        run: |
+          git clone https://github.com/GeorgeT88/manuelaklenke-web.git scan-web
+          cd scan-web && snyk test --json-file-output=../snyk-web.json || true
+
+      - name: Scan manuelaklenke-playwright-e2e
+        continue-on-error: true
+        run: |
+          git clone https://github.com/GeorgeT88/manuelaklenke-playwright-e2e.git scan-playwright
+          cd scan-playwright && snyk test --json-file-output=../snyk-playwright.json || true
+
+      - name: Scan manuelaklenke-selenium-e2e
+        continue-on-error: true
+        run: |
+          git clone https://github.com/GeorgeT88/manuelaklenke-selenium-e2e.git scan-selenium
+          cd scan-selenium && snyk test --json-file-output=../snyk-selenium.json || true
+
+      - name: Scan manuelaklenke-cypress-e2e
+        continue-on-error: true
+        run: |
+          git clone https://github.com/GeorgeT88/manuelaklenke-cypress-e2e.git scan-cypress
+          cd scan-cypress && snyk test --json-file-output=../snyk-cypress.json || true
+
+      - name: Generate HTML reports
+        if: always()
+        run: |
+          mkdir -p snyk-report
+          for project in web playwright selenium cypress; do
+            if [ -f "snyk-${project}.json" ]; then
+              snyk-to-html -i snyk-${project}.json -o snyk-report/${project}.html || echo "<h2>Failed to generate report for ${project}</h2>" > snyk-report/${project}.html
+            else
+              echo "<h2>No scan results for ${project}</h2>" > snyk-report/${project}.html
+            fi
+          done
+
+      - name: Generate index page
+        if: always()
+        run: |
+          cat > snyk-report/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>Snyk Security Reports — manuelaklenke.com</title>
+            <style>
+              body { font-family: sans-serif; max-width: 860px; margin: 48px auto; padding: 0 24px; color: #2d2d2d; }
+              h1 { color: #4c4a73; margin-bottom: 8px; }
+              p { color: #666; margin-bottom: 32px; }
+              .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+              .card { padding: 24px; border: 1px solid #e0dff5; border-radius: 10px; text-decoration: none; color: inherit; transition: box-shadow 0.2s; }
+              .card:hover { box-shadow: 0 4px 16px rgba(76,74,115,0.12); }
+              .card h2 { margin: 0 0 6px; font-size: 1em; color: #4c4a73; }
+              .card p { margin: 0; font-size: 0.85em; color: #999; }
+            </style>
+          </head>
+          <body>
+            <h1>🔒 Snyk Dependency Security Reports</h1>
+            <p>Vulnerability scan results for all manuelaklenke.com repositories.</p>
+            <div class="grid">
+              <a class="card" href="web.html">
+                <h2>manuelaklenke-web</h2>
+                <p>React, MUI, Supabase, Vite dependencies</p>
+              </a>
+              <a class="card" href="playwright.html">
+                <h2>manuelaklenke-playwright-e2e</h2>
+                <p>Playwright test dependencies</p>
+              </a>
+              <a class="card" href="selenium.html">
+                <h2>manuelaklenke-selenium-e2e</h2>
+                <p>Selenium, Mocha, Allure dependencies</p>
+              </a>
+              <a class="card" href="cypress.html">
+                <h2>manuelaklenke-cypress-e2e</h2>
+                <p>Cypress, Mochawesome dependencies</p>
+              </a>
+            </div>
+          </body>
+          </html>
+          EOF
+          touch snyk-report/.nojekyll
+
+      - name: Write scan summary
+        if: always()
+        run: |
+          echo "## Snyk Dependency Scan Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Repos scanned:** manuelaklenke-web, manuelaklenke-playwright-e2e, manuelaklenke-selenium-e2e, manuelaklenke-cypress-e2e" >> $GITHUB_STEP_SUMMARY
+          echo "**Trigger:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📊 [View full Snyk report](https://georget88.github.io/manuelaklenke-snyk-security/)" >> $GITHUB_STEP_SUMMARY
+
+      - name: Publish Snyk report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./snyk-report
+          destination_dir: .
