@@ -39,7 +39,7 @@ Snyk checks each `package.json` against its vulnerability database and reports:
 
 ## ⚙️ CI/CD Pipeline
 
-The scan is triggered automatically by [GeorgeT88/manuelaklenke-web](https://github.com/GeorgeT88/manuelaklenke-web) after every push to `main`, once all E2E tests have completed:
+The scan is triggered automatically by [GeorgeT88/manuelaklenke-web](https://github.com/GeorgeT88/manuelaklenke-web) after every push to `main`, once all E2E tests have completed. Snyk runs in parallel with Semgrep SAST:
 
 ```
 📦 Push to manuelaklenke-web
@@ -48,7 +48,9 @@ The scan is triggered automatically by [GeorgeT88/manuelaklenke-web](https://git
         ↓
 🎭 Playwright + 🔬 Selenium + 🌲 Cypress (parallel)
         ↓
-⚡ repository_dispatch: vercel-deploy
+🛡️ OWASP ZAP — skipped (manual/nightly only)
+        ↓
+⚡ repository_dispatch: vercel-deploy  ←─ Snyk + Semgrep triggered in parallel
         ↓
 🔒 Snyk scans all 4 repos
         ↓
