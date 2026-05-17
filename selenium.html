@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Snyk test report</title>
-  <meta name="description" content="0 known vulnerabilities found in 0 vulnerable dependency paths.">
+  <meta name="description" content="1 known vulnerabilities found in 1 vulnerable dependency paths.">
   <base target="_blank">
   <link rel="icon" type="image/png" href="https://res.cloudinary.com/snyk/image/upload/v1468845142/favicon/favicon.png"
     sizes="194x194">
@@ -492,7 +492,7 @@
               <div class="header-wrap">
                   <h1 class="project__header__title">Snyk test report</h1>
     
-                <p class="timestamp">May 16th 2026, 8:45:14 am (UTC+00:00)</p>
+                <p class="timestamp">May 17th 2026, 8:59:08 am (UTC+00:00)</p>
               </div>
               <div class="source-panel">
                 <span>Scanned the following path:</span>
@@ -502,8 +502,8 @@
               </div>
     
               <div class="meta-counts">
-                <div class="meta-count"><span>0</span> <span>known vulnerabilities</span></div>
-                <div class="meta-count"><span>0 vulnerable dependency paths</span></div>
+                <div class="meta-count"><span>1</span> <span>known vulnerabilities</span></div>
+                <div class="meta-count"><span>1 vulnerable dependency paths</span></div>
                 <div class="meta-count"><span>17</span> <span>dependencies</span></div>
               </div><!-- .meta-counts -->
             </div><!-- .layout-container--short -->
@@ -520,7 +520,104 @@
           </table>
       </section>
     <div class="layout-container" style="padding-top: 35px;">
-      No known vulnerabilities detected.
+      <div class="cards--vuln filter--patch filter--ignore">
+        <div class="card card--vuln  disclosure--not-new severity--medium" data-snyk-test="medium">
+            <h2 class="card__title">Use of Uninitialized Resource</h2>
+            <div class="card__section">
+        
+                <div class="card__labels">
+                    <div class="label label--medium">
+                        <span class="label__text">medium severity</span>
+                    </div>
+                    <div class="label label--exploit">
+                        <span class="label__text">Exploit: Proof of Concept</span>
+                    </div>
+                </div>
+        
+                <hr/>
+        
+                <ul class="card__meta">
+                    <li class="card__meta__item">
+                        Package Manager: npm
+                    </li>
+                    <li class="card__meta__item">
+                            Vulnerable module:
+        
+                            ws
+                    </li>
+        
+                    <li class="card__meta__item">Introduced through:
+        
+        
+                                    manuelaklenke-selenium-e2e@1.0.0, selenium-webdriver@4.43.0 and others
+                    </li>
+                </ul>
+        
+                <hr/>
+        
+        
+                        <h3 class="card__section__title">Detailed paths</h3>
+        
+                    <ul class="card__meta__paths">
+                                <li>
+                                <span class="list-paths__item__introduced"><em>Introduced through</em>:
+                                        manuelaklenke-selenium-e2e@1.0.0
+                                         <span class="list-paths__item__arrow">›</span> 
+                                        selenium-webdriver@4.43.0
+                                         <span class="list-paths__item__arrow">›</span> 
+                                        ws@8.20.0
+                                        
+                                </span>
+        
+                            </li>
+                    </ul><!-- .list-paths -->
+        
+            </div><!-- .card__section -->
+        
+              <hr/>
+              <!-- Overview -->
+              <h2 id="overview">Overview</h2>
+        <p><a href="https://www.npmjs.com/package/ws">ws</a> is a simple to use websocket client, server and console for node.js.</p>
+        <p>Affected versions of this package are vulnerable to Use of Uninitialized Resource in the <code>websocket.close()</code> implementation in the <code>Sender</code> class, which exposes uninitialized memory when a <code>TypedArray</code> is provided as the <code>reason</code> argument.</p>
+        <p><strong>Note:</strong> The project maintainers note that this &quot;flaw is only exploitable through misuse that is unlikely in practice&quot;.</p>
+        <h2 id="poc">PoC</h2>
+        <pre><code class="language-js">import { deepStrictEqual } from &#39;node:assert&#39;;
+        import { WebSocket, WebSocketServer } from &#39;ws&#39;;
+        
+        const wss = new WebSocketServer(
+          { port: 0, skipUTF8Validation: true },
+          function () {
+            const { port } = wss.address();
+            const ws = new WebSocket(`ws://localhost:${port}`, {
+              skipUTF8Validation: true
+            });
+        
+            ws.on(&#39;close&#39;, function (code, reason) {
+              deepStrictEqual(reason, Buffer.alloc(80));
+            });
+          }
+        );
+        
+        wss.on(&#39;connection&#39;, function (ws) {
+          ws.close(1000, new Float32Array(20));
+        });
+        </code></pre>
+        <h2 id="remediation">Remediation</h2>
+        <p>Upgrade <code>ws</code> to version 8.20.1 or higher.</p>
+        <h2 id="references">References</h2>
+        <ul>
+        <li><a href="https://github.com/websockets/ws/security/advisories/GHSA-58qx-3vcg-4xpx">GitHub Advisory</a></li>
+        <li><a href="https://github.com/websockets/ws/commit/c0327ec15a54d701eb6ccefaa8bef328cfc03086">GitHub Commit</a></li>
+        </ul>
+        
+              <hr/>
+        
+            <div class="cta card__cta">
+                <p><a href="https://snyk.io/vuln/SNYK-JS-WS-16722635">More about this vulnerability</a></p>
+            </div>
+        
+        </div><!-- .card -->
+      </div><!-- cards -->
     </div>
   </main><!-- .layout-stacked__content -->
 </body>
