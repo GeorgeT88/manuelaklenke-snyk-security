@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Snyk test report</title>
-  <meta name="description" content="1 known vulnerabilities found in 1 vulnerable dependency paths.">
+  <meta name="description" content="2 known vulnerabilities found in 2 vulnerable dependency paths.">
   <base target="_blank">
   <link rel="icon" type="image/png" href="https://res.cloudinary.com/snyk/image/upload/v1468845142/favicon/favicon.png"
     sizes="194x194">
@@ -492,7 +492,7 @@
               <div class="header-wrap">
                   <h1 class="project__header__title">Snyk test report</h1>
     
-                <p class="timestamp">June 3rd 2026, 10:26:24 am (UTC+00:00)</p>
+                <p class="timestamp">June 3rd 2026, 11:51:18 am (UTC+00:00)</p>
               </div>
               <div class="source-panel">
                 <span>Scanned the following path:</span>
@@ -502,8 +502,8 @@
               </div>
     
               <div class="meta-counts">
-                <div class="meta-count"><span>1</span> <span>known vulnerabilities</span></div>
-                <div class="meta-count"><span>1 vulnerable dependency paths</span></div>
+                <div class="meta-count"><span>2</span> <span>known vulnerabilities</span></div>
+                <div class="meta-count"><span>2 vulnerable dependency paths</span></div>
                 <div class="meta-count"><span>107</span> <span>dependencies</span></div>
               </div><!-- .meta-counts -->
             </div><!-- .layout-container--short -->
@@ -521,6 +521,83 @@
       </section>
     <div class="layout-container" style="padding-top: 35px;">
       <div class="cards--vuln filter--patch filter--ignore">
+        <div class="card card--vuln  disclosure--not-new severity--critical" data-snyk-test="critical">
+            <h2 class="card__title">Deserialization of Untrusted Data</h2>
+            <div class="card__section">
+        
+                <div class="card__labels">
+                    <div class="label label--critical">
+                        <span class="label__text">critical severity</span>
+                    </div>
+                    <div class="label label--exploit">
+                        <span class="label__text">Exploit: Not Defined</span>
+                    </div>
+                </div>
+        
+                <hr/>
+        
+                <ul class="card__meta">
+                    <li class="card__meta__item">
+                        Package Manager: npm
+                    </li>
+                    <li class="card__meta__item">
+                            Vulnerable module:
+        
+                            react-router
+                    </li>
+        
+                    <li class="card__meta__item">Introduced through:
+        
+        
+                                    manuelaklenke-web@0.0.0, react-router-dom@7.13.1 and others
+                    </li>
+                </ul>
+        
+                <hr/>
+        
+        
+                        <h3 class="card__section__title">Detailed paths</h3>
+        
+                    <ul class="card__meta__paths">
+                                <li>
+                                <span class="list-paths__item__introduced"><em>Introduced through</em>:
+                                        manuelaklenke-web@0.0.0
+                                         <span class="list-paths__item__arrow">›</span> 
+                                        react-router-dom@7.13.1
+                                         <span class="list-paths__item__arrow">›</span> 
+                                        react-router@7.13.1
+                                        
+                                </span>
+        
+                            </li>
+                    </ul><!-- .list-paths -->
+        
+            </div><!-- .card__section -->
+        
+              <hr/>
+              <!-- Overview -->
+              <h2 id="overview">Overview</h2>
+        <p>Affected versions of this package are vulnerable to Deserialization of Untrusted Data via the <code>turbo-stream</code> component in in Framework Mode. An attacker can execute arbitrary code on the remote server by sending specially crafted external requests that exploit an existing prototype pollution issue in the application code.</p>
+        <p><strong>Note:</strong></p>
+        <p>Users that are using Declarative Mode (<code>&lt;BrowserRouter&gt;</code>) or Data Mode (<code>createBrowserRouter/&lt;RouterProvider&gt;</code>) are not impacted.</p>
+        <h2 id="details">Details</h2>
+        <p>Serialization is a process of converting an object into a sequence of bytes which can be persisted to a disk or database or can be sent through streams. The reverse process of creating object from sequence of bytes is called deserialization. Serialization is commonly used for communication (sharing objects between multiple hosts) and persistence (store the object state in a file or a database). It is an integral part of popular protocols like <em>Remote Method Invocation (RMI)</em>, <em>Java Management Extension (JMX)</em>, <em>Java Messaging System (JMS)</em>, <em>Action Message Format (AMF)</em>, <em>Java Server Faces (JSF) ViewState</em>, etc.</p>
+        <p><em>Deserialization of untrusted data</em> (<a href="https://cwe.mitre.org/data/definitions/502.html">CWE-502</a>) is when the application deserializes untrusted data without sufficiently verifying that the resulting data will be valid, thus allowing the attacker to control the state or the flow of the execution.</p>
+        <h2 id="remediation">Remediation</h2>
+        <p>Upgrade <code>react-router</code> to version 7.14.2 or higher.</p>
+        <h2 id="references">References</h2>
+        <ul>
+        <li><a href="https://github.com/remix-run/react-router/security/advisories/GHSA-49rj-9fvp-4h2h">GitHub Advisory</a></li>
+        <li><a href="https://github.com/remix-run/react-router/commit/bc77b329102e18c0acecb839a4357c12a66f06c1">GitHub Commit</a></li>
+        </ul>
+        
+              <hr/>
+        
+            <div class="cta card__cta">
+                <p><a href="https://snyk.io/vuln/SNYK-JS-REACTROUTER-17137394">More about this vulnerability</a></p>
+            </div>
+        
+        </div><!-- .card -->
         <div class="card card--vuln  disclosure--not-new severity--medium" data-snyk-test="medium">
             <h2 class="card__title">Use of Uninitialized Resource</h2>
             <div class="card__section">
