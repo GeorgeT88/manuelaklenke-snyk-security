@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Snyk test report</title>
-  <meta name="description" content="4 known vulnerabilities found in 4 vulnerable dependency paths.">
+  <meta name="description" content="5 known vulnerabilities found in 5 vulnerable dependency paths.">
   <base target="_blank">
   <link rel="icon" type="image/png" href="https://res.cloudinary.com/snyk/image/upload/v1468845142/favicon/favicon.png"
     sizes="194x194">
@@ -492,7 +492,7 @@
               <div class="header-wrap">
                   <h1 class="project__header__title">Snyk test report</h1>
     
-                <p class="timestamp">July 16th 2026, 9:08:43 am (UTC+00:00)</p>
+                <p class="timestamp">July 17th 2026, 9:03:34 am (UTC+00:00)</p>
               </div>
               <div class="source-panel">
                 <span>Scanned the following path:</span>
@@ -502,8 +502,8 @@
               </div>
     
               <div class="meta-counts">
-                <div class="meta-count"><span>4</span> <span>known vulnerabilities</span></div>
-                <div class="meta-count"><span>4 vulnerable dependency paths</span></div>
+                <div class="meta-count"><span>5</span> <span>known vulnerabilities</span></div>
+                <div class="meta-count"><span>5 vulnerable dependency paths</span></div>
                 <div class="meta-count"><span>17</span> <span>dependencies</span></div>
               </div><!-- .meta-counts -->
             </div><!-- .layout-container--short -->
@@ -637,6 +637,80 @@
         
             <div class="cta card__cta">
                 <p><a href="https://snyk.io/vuln/SNYK-JS-WS-17344547">More about this vulnerability</a></p>
+            </div>
+        
+        </div><!-- .card -->
+        <div class="card card--vuln  disclosure--not-new severity--high" data-snyk-test="high">
+            <h2 class="card__title">Allocation of Resources Without Limits or Throttling</h2>
+            <div class="card__section">
+        
+                <div class="card__labels">
+                    <div class="label label--high">
+                        <span class="label__text">high severity</span>
+                    </div>
+                    <div class="label label--exploit">
+                        <span class="label__text">Exploit: Not Defined</span>
+                    </div>
+                </div>
+        
+                <hr/>
+        
+                <ul class="card__meta">
+                    <li class="card__meta__item">
+                        Package Manager: npm
+                    </li>
+                    <li class="card__meta__item">
+                            Vulnerable module:
+        
+                            ws
+                    </li>
+        
+                    <li class="card__meta__item">Introduced through:
+        
+        
+                                    manuelaklenke-selenium-e2e@1.0.0, selenium-webdriver@4.43.0 and others
+                    </li>
+                </ul>
+        
+                <hr/>
+        
+        
+                        <h3 class="card__section__title">Detailed paths</h3>
+        
+                    <ul class="card__meta__paths">
+                                <li>
+                                <span class="list-paths__item__introduced"><em>Introduced through</em>:
+                                        manuelaklenke-selenium-e2e@1.0.0
+                                         <span class="list-paths__item__arrow">›</span> 
+                                        selenium-webdriver@4.43.0
+                                         <span class="list-paths__item__arrow">›</span> 
+                                        ws@8.20.0
+                                        
+                                </span>
+        
+                            </li>
+                    </ul><!-- .list-paths -->
+        
+            </div><!-- .card__section -->
+        
+              <hr/>
+              <!-- Overview -->
+              <h2 id="overview">Overview</h2>
+        <p><a href="https://www.npmjs.com/package/ws">ws</a> is a simple to use websocket client, server and console for node.js.</p>
+        <p>Affected versions of this package are vulnerable to Allocation of Resources Without Limits or Throttling through the <code>receiver.js</code>. An attacker can cause memory exhaustion by sending incomplete fragmented WebSocket messages, specifically by transmitting a text frame with <code>FIN=0</code> followed by multiple continuation frames without completing the sequence, resulting in each fragment being stored as a separate Buffer object with significant overhead.</p>
+        <h2 id="remediation">Remediation</h2>
+        <p>Upgrade <code>ws</code> to version 8.21.1 or higher.</p>
+        <h2 id="references">References</h2>
+        <ul>
+        <li><a href="https://github.com/websockets/ws/commit/f197ac65140920bdcecdab74bfc69c2d7858e55d">GitHub Commit</a></li>
+        <li><a href="https://github.com/websockets/ws/issues/2331">GitHub Issue</a></li>
+        <li><a href="https://github.com/websockets/ws/releases/tag/8.21.1">GitHub Release</a></li>
+        </ul>
+        
+              <hr/>
+        
+            <div class="cta card__cta">
+                <p><a href="https://snyk.io/vuln/SNYK-JS-WS-17988732">More about this vulnerability</a></p>
             </div>
         
         </div><!-- .card -->
