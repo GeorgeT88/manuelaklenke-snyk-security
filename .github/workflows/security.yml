@@ -1,17 +1,9 @@
 name: Snyk Dependency Security Scan
 
-run-name: >-
-  ${{ github.event_name == 'workflow_dispatch' && 'Snyk Dependency Scan — manual run' ||
-      github.event_name == 'repository_dispatch' && 'Snyk Dependency Scan — triggered by Vercel deploy' ||
-      github.event_name == 'schedule' && 'Snyk Dependency Scan — nightly run' ||
-      'Snyk Dependency Scan' }}
+run-name: Snyk Dependency Scan — manual run
 
 on:
-  repository_dispatch:
-    types: [vercel-deploy]
   workflow_dispatch:
-  schedule:
-    - cron: '0 7 * * *'
 
 permissions:
   contents: write
